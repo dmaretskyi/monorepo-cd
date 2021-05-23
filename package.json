@@ -12,9 +12,7 @@
     "@types/node": "^15.6.0",
     "@types/react": "^17.0.6",
     "ts-node": "^9.1.1",
-    "typescript": "^4.2.4"
-  },
-  "dependencies": {
+    "typescript": "^4.2.4",
     "chalk": "^4.1.1",
     "fuzzy": "^0.1.3",
     "ink": "^3.0.8",
