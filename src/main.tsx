@@ -86,9 +86,9 @@ function App({ scanResult, initialPrompt }: AppProps) {
 
   useInput((input, key) => {
     if(key.downArrow) {
-      setSelectedIndex(prev => prev + 1)
-    } else if(key.upArrow) {
       setSelectedIndex(prev => Math.max(prev - 1, 0))
+    } else if(key.upArrow) {
+      setSelectedIndex(prev => prev + 1)
     } else if(key.return) {
       const selectedPackage = filtered[selectedIndex]?.original
       if(selectedPackage) {
@@ -105,14 +105,16 @@ function App({ scanResult, initialPrompt }: AppProps) {
   })
 
   return (
-    <Box flexDirection="column">
-      <Text>$ {userInput}</Text>
-      {filtered.slice(0, 12).map((pkg, idx) => (
-        <Box key={pkg.original.name} flexDirection='row' justifyContent='space-between'>
-          <HighlightedString inverse={idx === selectedIndex}>{pkg.string}</HighlightedString>
-          <Text inverse={idx === selectedIndex} dimColor>{pkg.original.path}</Text>
-        </Box>
-      ))}
+    <Box flexDirection="column" height={13}>
+      <Box height={12} flexDirection="column-reverse">
+        {filtered.slice(0, 12).map((pkg, idx) => (
+          <Box key={pkg.original.name + idx.toString()} flexDirection='row' justifyContent='space-between'>
+            <HighlightedString inverse={idx === selectedIndex}>{pkg.string}</HighlightedString>
+            <Text inverse={idx === selectedIndex} dimColor>{pkg.original.path}</Text>
+          </Box>
+        ))}
+      </Box>
+      <Text><Text color="blue">{'>'}</Text> {userInput}</Text>
     </Box>
   )
 }
