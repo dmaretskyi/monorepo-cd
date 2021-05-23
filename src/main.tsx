@@ -4,18 +4,28 @@ import React, { useEffect, useState } from 'react'
 import { filter } from 'fuzzy'
 import { join } from "path"
 import fs from 'fs'
+import { scanProjectDirectory } from "./project-scanner"
 
 async function main() {
-  const args = process.argv.slice(2)
+  const args = process.argv.slice(2).filter(a => !a.startsWith('-'))
+  const options = process.argv.slice(2).filter(a => a.startsWith('-'))
 
-  const scanResult = scan()
+  if(options.includes('--init')) {
+    process.stdout.write(`m() { ${process.argv[1]} $@ && cd $(cat /tmp/monorepo-cd-target) }\n`)
+    return
+  } 
+
+  let scanResult: ScanResult;
+  if(options.includes('-p')) {
+    scanResult = scanProjectDirectory(join(process.env.HOME!, 'Projects'))
+  } else {
+    scanResult = scan()
+  }
   if(scanResult.packages.length === 0) {
     throw new Error('No packages detected.')
   }
-
-  if(args[0] === '--init') {
-    process.stdout.write(`m() { ${process.argv[1]} $@ && cd $(cat /tmp/monorepo-cd-target) }\n`)
-  } else if(args.length === 0) { // Interactive mode.
+  
+  if(args.length === 0) { // Interactive mode.
     runInteractive(scanResult)
   } else {
     if(args[0] === '/') {
