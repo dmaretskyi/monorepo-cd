@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "bin": "./bin/main-bundle.js",
   "scripts": {
     "build": "tsc && yarn bundle",
     "bundle": "esbuild --platform=node --bundle --outfile=bin/main-bundle.js --minify bin/main.js"
