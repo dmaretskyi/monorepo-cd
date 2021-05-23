@@ -8,6 +8,10 @@
     "build": "tsc && yarn bundle",
     "bundle": "esbuild --platform=node --bundle --outfile=bin/main-bundle.js --minify bin/main.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Marik-D/monorepo-cd"
+  },
   "devDependencies": {
     "@types/node": "^15.6.0",
     "@types/react": "^17.0.6",
