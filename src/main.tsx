@@ -11,7 +11,12 @@ async function main() {
   const options = process.argv.slice(2).filter(a => a.startsWith('-'))
 
   if(options.includes('--init')) {
-    process.stdout.write(`m() { ${process.argv[1]} $@ && cd $(cat /tmp/monorepo-cd-target) }\n`)
+    if(args.length === 0) {
+      process.stderr.write('monorepo-cd: Specify the name of generated bash function.')
+      process.exit(1);
+    }
+    
+    process.stdout.write(`${args[0]}() { ${process.argv[1]} $@ && cd $(cat /tmp/monorepo-cd-target) }\n`)
     return
   } 
 
