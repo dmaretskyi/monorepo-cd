@@ -13,7 +13,9 @@ async function main() {
     throw new Error('No packages detected.')
   }
 
-  if(args.length === 0) { // Interactive mode.
+  if(args[0] === '--init') {
+    process.stdout.write(`m() { ${process.argv[1]} $@ && cd $(cat /tmp/monorepo-cd-target) }\n`)
+  } else if(args.length === 0) { // Interactive mode.
     runInteractive(scanResult)
   } else {
     if(args[0] === '/') {
