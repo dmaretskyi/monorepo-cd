@@ -17,7 +17,7 @@ async function main() {
 
   let scanResult: ScanResult;
   if(options.includes('-p')) {
-    scanResult = scanProjectDirectory(join(process.env.HOME!, 'Projects'))
+    scanResult = scanProjectDirectory(process.env.PROJECTS_DIR ?? join(process.env.HOME!, 'Projects'))
   } else {
     scanResult = scan()
   }
