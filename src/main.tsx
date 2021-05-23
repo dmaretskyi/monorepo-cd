@@ -1,8 +1,6 @@
-import chalk from "chalk"
-import { Package, scan } from "./scanner"
-import { max } from "./util"
-import { Box, DOMElement, measureElement, Newline, render, Text, TextProps, useApp, useInput } from 'ink'
-import React, { useEffect, useRef, useState } from 'react'
+import { Package, scan, ScanResult } from "./scanner"
+import { Box, render, Text, useApp, useInput } from 'ink'
+import React, { useEffect, useState } from 'react'
 import { filter } from 'fuzzy'
 import { join } from "path"
 import fs from 'fs'
@@ -10,29 +8,54 @@ import fs from 'fs'
 async function main() {
   const args = process.argv.slice(2)
 
-  const { repositoryRoot, packages } = scan()
-  if(packages.length === 0) {
+  const scanResult = scan()
+  if(scanResult.packages.length === 0) {
     throw new Error('No packages detected.')
   }
 
   if(args.length === 0) { // Interactive mode.
-    // Clear target in case the script is killed.
-    fs.writeFileSync('/tmp/monorepo-cd-target', '.', { encoding: 'utf-8' })
-    render(<App packages={packages} repositoryRoot={repositoryRoot} />)
+    runInteractive(scanResult)
+  } else {
+    if(args[0] === '/') {
+      writeCdTarget(scanResult.repositoryRoot)
+      process.exit(0)
+    } else {
+      const filtered = filter(args[0], scanResult.packages, {
+        extract: p => p.name,
+      });
+
+      if(filtered.length === 1) {
+        writeCdTarget(join(scanResult.repositoryRoot, filtered[0].original.path))
+        process.exit(0)
+      } else {
+        runInteractive(scanResult, args[0])
+      }
+    }
   }
 }
 
-interface AppProps {
-  packages: Package[]
-  repositoryRoot: string
+function runInteractive(scanResult: ScanResult, initialPrompt = '') {
+  // Clear target in case the script is killed.
+  writeCdTarget('.')
+
+  render(<App scanResult={scanResult} initialPrompt={initialPrompt} />)
 }
 
-function App({ packages, repositoryRoot }: AppProps) {
-  const [userInput, setUserInput] = useState('');
+function writeCdTarget(path: string) {
+  fs.writeFileSync('/tmp/monorepo-cd-target', path, { encoding: 'utf-8' })
+}
+
+interface AppProps {
+  scanResult: ScanResult
+  initialPrompt: string
+}
+
+function App({ scanResult, initialPrompt }: AppProps) {
+  const [userInput, setUserInput] = useState(initialPrompt);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { exit } = useApp()
 
-  const filtered = filter(userInput, packages, {
+  const filtered = filter(userInput, scanResult.packages, {
      extract: p => p.name,
      pre: '$',
      post: '$'
@@ -52,7 +75,7 @@ function App({ packages, repositoryRoot }: AppProps) {
     } else if(key.return) {
       const selectedPackage = filtered[selectedIndex]?.original
       if(selectedPackage) {
-        fs.writeFileSync('/tmp/monorepo-cd-target', join(repositoryRoot, selectedPackage.path), { encoding: 'utf-8' })
+        writeCdTarget(join(scanResult.repositoryRoot, selectedPackage.path))
         exit()
       }
     } else if(key.ctrl && input === 'w') { // Option + Delete generates this sequence.

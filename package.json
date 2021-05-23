@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc && yarn bundle",
+    "bundle": "esbuild --platform=node --bundle --outfile=bin/main-bundle.js --minify bin/main.js"
   },
   "devDependencies": {
     "@types/node": "^15.6.0",
