@@ -47,7 +47,7 @@ function *scanForPackages(dir: string, root: string): IterableIterator<Package> 
   if(fs.existsSync(join(dir, 'package.json'))) {
     try {
       const packageContents = JSON.parse(fs.readFileSync(join(dir, 'package.json'), 'utf-8'))
-      if(packageContents.name && !packageContents.workspace) {
+      if(packageContents.name && !packageContents.workspaces) {
         yield {
           name: packageContents.name,
           path: relative(root, dir)
