@@ -12,6 +12,9 @@
     "type": "git",
     "url": "https://github.com/Marik-D/monorepo-cd"
   },
+  "files": [
+    "bin/main-bundle.js"
+  ],
   "devDependencies": {
     "@types/node": "^15.6.0",
     "@types/react": "^17.0.6",
