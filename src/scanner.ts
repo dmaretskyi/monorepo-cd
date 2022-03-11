@@ -47,7 +47,7 @@ function *scanForPackages(dir: string, root: string): IterableIterator<Package> 
   if(fs.existsSync(join(dir, 'package.json'))) {
     try {
       const packageContents = JSON.parse(fs.readFileSync(join(dir, 'package.json'), 'utf-8'))
-      if(packageContents.name && !packageContents.workspaces) {
+      if(isPackage(packageContents, dir)) {
         yield {
           name: packageContents.name,
           path: relative(root, dir)
@@ -66,4 +66,17 @@ function *scanForPackages(dir: string, root: string): IterableIterator<Package> 
       yield* scanForPackages(join(dir, child), root)
     }      
   }
+}
+
+function isPackage(packageJson: any, directoryPath: string): boolean {
+  if(!packageJson.name) {
+    return false;
+  }
+  if(packageJson.workspaces) {
+    return false;
+  }
+  if(fs.existsSync(join(directoryPath, 'pnpm-workspace.yaml'))) {
+    return false;
+  }
+  return true;
 }
