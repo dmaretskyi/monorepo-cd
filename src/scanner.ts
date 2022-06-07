@@ -44,6 +44,21 @@ function findRepoRoot(dir: string): string {
 }
 
 function *scanForPackages(dir: string, root: string): IterableIterator<Package> {
+  // Special case for Rush monorepos.
+  if(fs.existsSync(join(root, 'rush.json'))) {
+    const { projects } = parseRushJson(join(root, 'rush.json'))
+    for(const project of projects) {
+      const packageContents = JSON.parse(fs.readFileSync(join(root, project.projectFolder, 'package.json'), 'utf-8'))
+      if(isPackage(packageContents, dir)) {
+        yield {
+          name: packageContents.name,
+          path: relative(root, dir)
+        }
+      }
+    }
+    return
+  }
+  
   if(fs.existsSync(join(dir, 'package.json'))) {
     try {
       const packageContents = JSON.parse(fs.readFileSync(join(dir, 'package.json'), 'utf-8'))
@@ -79,4 +94,15 @@ function isPackage(packageJson: any, directoryPath: string): boolean {
     return false;
   }
   return true;
+}
+
+interface RushJson {
+  projects: {
+    packageName: string,
+    projectFolder: string,
+  }[]
+}
+
+function parseRushJson(path: string): RushJson {
+  return eval(`(${fs.readFileSync(path, 'utf8')})`)
 }
