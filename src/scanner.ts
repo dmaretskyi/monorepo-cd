@@ -48,11 +48,12 @@ function *scanForPackages(dir: string, root: string): IterableIterator<Package> 
   if(fs.existsSync(join(root, 'rush.json'))) {
     const { projects } = parseRushJson(join(root, 'rush.json'))
     for(const project of projects) {
+      const path = join(dir, project.projectFolder)
       const packageContents = JSON.parse(fs.readFileSync(join(root, project.projectFolder, 'package.json'), 'utf-8'))
-      if(isPackage(packageContents, dir)) {
+      if(isPackage(packageContents, path)) {
         yield {
           name: packageContents.name,
-          path: relative(root, dir)
+          path: relative(root, path)
         }
       }
     }
