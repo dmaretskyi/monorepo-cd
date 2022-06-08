@@ -14,8 +14,21 @@ async function main() {
       process.stderr.write('monorepo-cd: Specify the name of generated bash function.')
       process.exit(1);
     }
+
+    const name = args[0]
+    const binary = process.argv[1]
     
-    process.stdout.write(`${args[0]}() { ${process.argv[1]} $@ && cd $(cat /tmp/monorepo-cd-target) }\n`)
+    process.stdout.write(`${name}() { ${binary} $@ && cd $(cat /tmp/monorepo-cd-target) }\n`)
+    process.stdout.write(`
+    _${name}() {
+      local -a pkg_names
+      pkg_names+=(\`${binary} --list\`)
+      _alternative 'args:app args:(($pkg_names))'
+      return 0
+    }
+      
+    compdef _${name} ${name}
+    `)
     return
   } 
 
@@ -27,6 +40,13 @@ async function main() {
   }
   if(scanResult.packages.length === 0) {
     throw new Error('No packages detected.')
+  }
+
+  if(options.includes('--list')) {
+    for(const pkg of scanResult.packages) {
+      console.log(pkg.name)
+    }
+    return
   }
   
   if(args.length === 0) { // Interactive mode.
