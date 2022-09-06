@@ -46,18 +46,20 @@ function findRepoRoot(dir: string): string {
 function *scanForPackages(dir: string, root: string): IterableIterator<Package> {
   // Special case for Rush monorepos.
   if(fs.existsSync(join(root, 'rush.json'))) {
-    const { projects } = parseRushJson(join(root, 'rush.json'))
-    for(const project of projects) {
-      const path = join(dir, project.projectFolder)
-      const packageContents = JSON.parse(fs.readFileSync(join(root, project.projectFolder, 'package.json'), 'utf-8'))
-      if(isPackage(packageContents, path)) {
-        yield {
-          name: packageContents.name,
-          path: relative(root, path)
+    try {
+      const { projects } = parseRushJson(join(root, 'rush.json'))
+      for(const project of projects) {
+        const path = join(dir, project.projectFolder)
+        const packageContents = JSON.parse(fs.readFileSync(join(root, project.projectFolder, 'package.json'), 'utf-8'))
+        if(isPackage(packageContents, path)) {
+          yield {
+            name: packageContents.name,
+            path: relative(root, path)
+          }
         }
       }
-    }
-    return
+      return
+    } catch {} // On error fall back to normal scanning.
   }
   
   if(fs.existsSync(join(dir, 'package.json'))) {
