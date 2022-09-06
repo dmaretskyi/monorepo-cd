@@ -38,7 +38,6 @@ async function main() {
   } else {
     scanResult = scan()
   }
-  console.log(scanResult)
   if(scanResult.packages.length === 0) {
     throw new Error('No packages detected.')
   }
