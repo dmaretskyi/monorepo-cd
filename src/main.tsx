@@ -69,10 +69,11 @@ async function main() {
 }
 
 function filterPackages(packages: Package[], query: string): Package[] {
-  const exactMatch = packages.find(p => p.name === query)
-  if(exactMatch) {
-    return [exactMatch]
+  const exactMatches = packages.filter(p => p.name === query || p.name.split('/').slice(-1)[0] === query)
+  if(exactMatches.length === 1) {
+    return exactMatches
   }
+  
 
   const filtered = filter(query, packages, {
     extract: p => p.name,
