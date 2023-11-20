@@ -7,8 +7,6 @@ import { scanProjectDirectory } from "./project-scanner.js";
 import { runInteractive } from "./interactive.js";
 import { writeCdTarget } from "./cd.js";
 
-console.log("module load", performance.now());
-
 const args = process.argv.slice(2).filter((a) => !a.startsWith("-"));
 const options = process.argv.slice(2).filter((a) => a.startsWith("-"));
 
