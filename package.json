@@ -1,9 +1,9 @@
 {
   "name": "monorepo-cd",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "license": "MIT",
   "type": "module",
-  "bin": "./bin/main-bundle.js",
+  "bin": "./bin/main.js",
   "scripts": {
     "build": "tsc && yarn bundle",
     "bundle": "node scripts/bundle.js"
