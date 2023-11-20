@@ -5,7 +5,7 @@ await build({
   outfile: 'bin/main-bundle.js',
   bundle: true,
   platform: 'node',
-  // format: 'esm',
+  format: 'esm',
   define: {
     'process.env.NODE_ENV': '"production"',
   },

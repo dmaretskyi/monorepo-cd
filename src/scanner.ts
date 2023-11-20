@@ -27,8 +27,11 @@ export function scan(from = process.cwd()) {
 // TODO: Read from gitignore.
 const IGNORED_FILE_NAMES = [
   '.git',
+  '.nx',
   'node_modules',
-  'dist'
+  'dist',
+  'build',
+  'out',
 ]
 
 function findRepoRoot(dir: string): string {
@@ -44,6 +47,7 @@ function findRepoRoot(dir: string): string {
 }
 
 function *scanForPackages(dir: string, root: string): IterableIterator<Package> {
+  console.log(dir)
   // Special case for Rush monorepos.
   if(fs.existsSync(join(root, 'rush.json'))) {
     try {
