@@ -47,7 +47,6 @@ function findRepoRoot(dir: string): string {
 }
 
 function *scanForPackages(dir: string, root: string): IterableIterator<Package> {
-  console.log(dir)
   // Special case for Rush monorepos.
   if(fs.existsSync(join(root, 'rush.json'))) {
     try {
