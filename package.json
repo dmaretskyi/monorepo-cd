@@ -1,6 +1,6 @@
 {
   "name": "monorepo-cd",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "license": "MIT",
   "type": "module",
   "bin": "./bin/main.js",
@@ -13,7 +13,8 @@
     "url": "https://github.com/Marik-D/monorepo-cd"
   },
   "files": [
-    "bin/main-bundle.js"
+    "bin/main.js",
+    "dist"
   ],
   "devDependencies": {
     "@types/node": "^20.8.10",
