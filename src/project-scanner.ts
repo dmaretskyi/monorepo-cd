@@ -1,6 +1,6 @@
 import { join, relative, basename } from "path";
-import * as fs from 'fs'
-import { Package, ScanResult } from "./scanner";
+import * as fs from 'node:fs'
+import { Package, ScanResult } from "./scanner.js";
 
 export function scanProjectDirectory(projectDir: string): ScanResult {
   const projects = Array.from(scanForProjects(projectDir, projectDir))

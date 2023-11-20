@@ -1,5 +1,5 @@
-import fs from "fs";
-import { join, dirname, relative } from 'path'
+import fs from "node:fs";
+import { join, dirname, relative } from 'node:path'
 
 export interface Package {
   name: string
@@ -107,5 +107,5 @@ interface RushJson {
 }
 
 function parseRushJson(path: string): RushJson {
-  return eval(`(${fs.readFileSync(path, 'utf8')})`)
+  return (0, eval)(`(${fs.readFileSync(path, 'utf8')})`)
 }

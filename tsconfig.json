@@ -10,13 +10,13 @@
       "ESNext"
     ],
     "jsx": "react",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
-    "target": "ES2018",
+    "target": "ESNext",
     "experimentalDecorators": true
   },
   "include": ["src"],

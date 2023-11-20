@@ -1,9 +1,11 @@
-import { Package, scan, ScanResult } from "./scanner"
-import { filter } from 'fuzzy'
-import { join } from "path"
-import { scanProjectDirectory } from "./project-scanner"
-import { runInteractive } from "./interactive"
-import { writeCdTarget } from "./cd"
+#!/usr/bin/env node
+
+import { Package, scan, ScanResult } from "./scanner.js"
+import fuzzy from 'fuzzy'
+import { join } from "node:path"
+import { scanProjectDirectory } from "./project-scanner.js"
+import { runInteractive } from "./interactive.js"
+import { writeCdTarget } from "./cd.js"
 
 async function main() {
   const args = process.argv.slice(2).filter(a => !a.startsWith('-'))
@@ -75,7 +77,7 @@ function filterPackages(packages: Package[], query: string): Package[] {
   }
   
 
-  const filtered = filter(query, packages, {
+  const filtered = fuzzy.filter(query, packages, {
     extract: p => p.name,
   });
 

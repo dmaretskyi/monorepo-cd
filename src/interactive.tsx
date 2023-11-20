@@ -1,9 +1,9 @@
-import { ScanResult } from "./scanner"
+import { ScanResult } from "./scanner.js"
 import { Box, render, Text, useApp, useInput } from 'ink'
 import React, { useEffect, useState } from 'react'
-import { filter } from 'fuzzy'
-import { join } from "path"
-import { writeCdTarget } from "./cd"
+import fuzzy from 'fuzzy'
+import { join } from "node:path"
+import { writeCdTarget } from "./cd.js"
 
 export function runInteractive(scanResult: ScanResult, initialPrompt = '') {
   // Clear target in case the script is killed.
@@ -22,7 +22,7 @@ function App({ scanResult, initialPrompt }: AppProps) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { exit } = useApp()
 
-  const filtered = filter(userInput, scanResult.packages, {
+  const filtered = fuzzy.filter(userInput, scanResult.packages, {
      extract: p => p.name,
      pre: '$',
      post: '$'
